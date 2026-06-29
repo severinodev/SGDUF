@@ -1,113 +1,164 @@
-# SGDUF - Sistema de Gestión de Droguería/Farmacia
+# SGDUF - Drugstore/Pharmacy Management System
 
-Sistema web completo para la gestión integral de una droguería o farmacia.
+A comprehensive web system for the complete management of a drugstore or pharmacy.
 
 ## 🚀 Tech Stack
 
-- **Frontend:** React 18 + Vite, React Router v6, Recharts, React Icons
-- **Backend:** Node.js + Express.js, JWT Auth, Sequelize ORM
-- **Base de datos:** PostgreSQL
+- **Frontend:** React 18 + Vite, React Router v7, Recharts, React Icons
+- **Backend:** Node.js + Express.js, JWT Authentication, Sequelize ORM
+- **Database:** PostgreSQL
 
-## 📋 Módulos
+## 📋 Modules
 
-| Módulo | Funcionalidades |
-|--------|----------------|
-| **Inventario** | Registro de medicamentos, verificación sanitaria, control de stock, alertas de stock mínimo, control de vencimientos, gestión de categorías |
-| **Ventas** | Punto de venta (POS), búsqueda rápida, descuentos, gestión de clientes, historial de ventas por vendedor, devoluciones |
-| **Pagos** | Registro de métodos de pago, cálculo de cambio, pago parcial/mixto, pagos a proveedores |
-| **Comprobantes** | Generación de comprobantes, cálculo automático de IVA, numeración local, exportación PDF |
-| **Reportes** | Dashboard gerencial, reporte de ventas, inventario, productos por vencer, más vendidos, compras |
+| Module | Features |
+|--------|----------|
+| **Inventory** | Medicine registration, sanitary registration verification, stock control, minimum stock alerts, expiration control, category management |
+| **Sales** | Point of Sale (POS), fast search, discounts, customer management, sales history by seller, returns |
+| **Payments** | Payment method registration, automatic change calculation, partial/mixed payments, supplier payments |
+| **Receipts** | Receipt generation, automatic tax (VAT) calculation, local numbering, PDF export |
+| **Reports** | Manager dashboard, sales reports, inventory reports, expiring products, best sellers, purchases |
 
 ## 👥 Roles
 
-- **Admin:** Acceso total al sistema
-- **Gerente:** Dashboard, reportes, inventario (lectura)
-- **Cajero/Vendedor:** POS, ventas, caja, comprobantes
+- **Admin:** Full access to the system
+- **Manager:** Dashboard, reports, inventory (read-only)
+- **Cashier/Seller:** POS, sales, register/cash control, receipts
 
-## 🛠️ Instalación
+## 🛠️ Installation & Setup
 
-### Prerrequisitos
+### Prerequisites
 
 - Node.js 18+
-- PostgreSQL 14+
+- PostgreSQL 14+ or Docker Desktop
 
-### 1. Base de datos
+### 1. Database Setup
 
+Using PostgreSQL locally, create the database:
 ```sql
 CREATE DATABASE sgduf;
 ```
+Or use Docker Desktop to spin up the database container:
+```bash
+docker-compose up -d db
+```
 
-### 2. Backend
+### 2. Environment Variables
+
+Create/configure the `.env` file in the project root:
+```env
+# Server
+DB_HOST=localhost
+DB_PORT=5432
+DB_NAME=sgduf
+DB_USER=postgres
+DB_PASSWORD=postgres
+JWT_SECRET=your_jwt_secret_key
+JWT_EXPIRES_IN=24h
+PORT=5000
+TAX_RATE=0.12
+
+# Client
+VITE_API_URL=http://localhost:5000/api
+```
+
+### 3. Backend Setup
 
 ```bash
 cd server
 npm install
 ```
 
-### 3. Frontend
+### 4. Frontend Setup
 
 ```bash
 cd client
 npm install
 ```
 
-### 4. Variables de entorno
+### 5. Seeding Initial Data
 
-Editar `.env` en la raíz del proyecto con tus credenciales de PostgreSQL.
-
-### 5. Seed (datos iniciales)
-
+Run the seed command to populate the database with categories, products, and default users:
 ```bash
 cd server
 npm run seed
 ```
 
-### 6. Iniciar
+### 6. Running the Application
 
-Terminal 1 - Backend:
+**Option A: Local Development**
+
+In Terminal 1 (Backend):
 ```bash
 cd server
 npm run dev
 ```
 
-Terminal 2 - Frontend:
+In Terminal 2 (Frontend):
 ```bash
 cd client
 npm run dev
 ```
 
-### 7. Acceder
+Open **`http://localhost:3000`** in your browser.
 
-Abrir `http://localhost:3000`
+**Option B: Full Docker Deployment**
+If you want to run the whole application stack via Docker, start Docker Desktop and run:
+```bash
+docker-compose up --build
+```
 
-### Credenciales demo
+### Demo Credentials
 
-| Rol | Email | Contraseña |
-|-----|-------|------------|
+| Role | Email | Password |
+|------|-------|----------|
 | Admin | admin@sgduf.com | admin123 |
-| Gerente | gerente@sgduf.com | gerente123 |
-| Cajero | cajero@sgduf.com | cajero123 |
+| Manager | gerente@sgduf.com | gerente123 |
+| Cashier | cajero@sgduf.com | cajero123 |
 
-## 📁 Estructura
+---
+
+## 🌐 Production Deployment
+
+### Backend (e.g., Render)
+1. Deploy the `server/` directory as a Web Service.
+2. Set the following Environment Variables:
+   - `NODE_ENV`: `production`
+   - `DATABASE_URL`: Your production database URI (e.g., Neon PostgreSQL).
+   - `FRONTEND_URL`: Your Vercel frontend URL (e.g., `https://your-app.vercel.app`).
+   - `JWT_SECRET`: A secure production secret key.
+3. Access the **Shell ⚡** tab in Render and run:
+   ```bash
+   npm run seed
+   ```
+
+### Frontend (e.g., Vercel)
+1. Deploy the `client/` directory as a Frontend project.
+2. Configure the following Environment Variable:
+   - `VITE_API_URL`: `https://your-backend.onrender.com/api` (replace with your Render backend URL).
+3. Redeploy the project so Vite compiles with the correct production URL.
+
+---
+
+## 📁 Directory Structure
 
 ```
 SGDUF/
-├── client/                  # Frontend React + Vite
+├── client/                  # React + Vite Frontend
 │   ├── src/
-│   │   ├── components/      # Layout (Sidebar, Header)
+│   │   ├── components/      # Common Layout (Sidebar, Header, MainLayout)
 │   │   ├── context/         # AuthContext
-│   │   ├── pages/           # Páginas por módulo
-│   │   ├── services/        # API (axios)
-│   │   ├── App.jsx          # Router principal
-│   │   └── index.css        # Design system
+│   │   ├── pages/           # Pages divided by modules (Auth, Ventas, etc.)
+│   │   ├── services/        # API calls (axios setup)
+│   │   ├── App.jsx          # Main Router
+│   │   └── index.css        # Design System (dark medical theme)
 │   └── vite.config.js
-├── server/                  # Backend Node.js + Express
-│   ├── config/              # Database config
-│   ├── controllers/         # Lógica de negocio
-│   ├── middleware/           # Auth & Role check
-│   ├── models/              # Modelos Sequelize
-│   ├── routes/              # Rutas API REST
-│   ├── seeders/             # Datos iniciales
-│   └── server.js            # Entry point
-└── .env                     # Variables de entorno
+├── server/                  # Node.js + Express Backend
+│   ├── config/              # Database connection configuration
+│   ├── controllers/         # Business logic
+│   ├── middleware/          # Security & Authentication guards
+│   ├── models/              # Sequelize database models
+│   ├── routes/              # Express API endpoints
+│   ├── seeders/             # Initial mock data seeder
+│   └── server.js            # App entry point
+└── .env                     # Environment variables
 ```
