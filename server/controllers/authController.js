@@ -1,0 +1,82 @@
+const jwt = require('jsonwebtoken');
+const { User } = require('../models');
+
+const generateToken = (user) => {
+  return jwt.sign(
+    { id: user.id, email: user.email, role: user.role },
+    process.env.JWT_SECRET,
+    { expiresIn: process.env.JWT_EXPIRES_IN || '24h' }
+  );
+};
+
+exports.login = async (req, res) => {
+  try {
+    const { email, password } = req.body;
+    if (!email || !password) {
+      return res.status(400).json({ message: 'Email y contraseña son requeridos.' });
+    }
+
+    const user = await User.findOne({ where: { email } });
+    if (!user || !user.active) {
+      return res.status(401).json({ message: 'Credenciales inválidas.' });
+    }
+
+    const isMatch = await user.comparePassword(password);
+    if (!isMatch) {
+      return res.status(401).json({ message: 'Credenciales inválidas.' });
+    }
+
+    const token = generateToken(user);
+    res.json({ token, user: user.toJSON() });
+  } catch (error) {
+    console.error('Login error:', error);
+    res.status(500).json({ message: 'Error del servidor.' });
+  }
+};
+
+exports.register = async (req, res) => {
+  try {
+    const { name, email, password, role } = req.body;
+
+    const existing = await User.findOne({ where: { email } });
+    if (existing) {
+      return res.status(400).json({ message: 'El email ya está registrado.' });
+    }
+
+    const user = await User.create({ name, email, password, role: role || 'cajero' });
+    res.status(201).json({ message: 'Usuario creado exitosamente.', user: user.toJSON() });
+  } catch (error) {
+    console.error('Register error:', error);
+    res.status(500).json({ message: 'Error al crear usuario.' });
+  }
+};
+
+exports.getProfile = async (req, res) => {
+  res.json({ user: req.user.toJSON() });
+};
+
+exports.updateProfile = async (req, res) => {
+  try {
+    const { name, email, password } = req.body;
+    const user = req.user;
+
+    if (name) user.name = name;
+    if (email) user.email = email;
+    if (password) user.password = password;
+
+    await user.save();
+    res.json({ message: 'Perfil actualizado.', user: user.toJSON() });
+  } catch (error) {
+    console.error('Update profile error:', error);
+    res.status(500).json({ message: 'Error al actualizar perfil.' });
+  }
+};
+
+exports.getUsers = async (req, res) => {
+  try {
+    const users = await User.findAll({ order: [['created_at', 'DESC']] });
+    res.json(users);
+  } catch (error) {
+    res.status(500).json({ message: 'Error al obtener usuarios.' });
+  }
+};
