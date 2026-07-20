@@ -16,7 +16,6 @@ exports.createCheckoutSession = async (req, res) => {
     const tenant = await Tenant.findByPk(req.user.tenant_id);
 
     const variantMap = {
-      'starter': process.env.LEMON_VARIANT_STARTER || 'variant_starter',
       'professional': process.env.LEMON_VARIANT_PRO || 'variant_pro',
       'enterprise': process.env.LEMON_VARIANT_ENTERPRISE || 'variant_enterprise'
     };
@@ -83,11 +82,21 @@ exports.webhook = async (req, res) => {
 
     if (eventName === 'subscription_created' || eventName === 'subscription_updated') {
       const tenantId = payload.meta.custom_data.tenant_id;
+      const variantId = obj.variant_id.toString();
+
+      // Dynamically resolve plan based on variant_id
+      let resolvedPlan = 'professional';
+      const enterpriseVariant = (process.env.LEMON_VARIANT_ENTERPRISE || 'variant_enterprise').toString();
       
+      if (variantId === enterpriseVariant) {
+        resolvedPlan = 'enterprise';
+      }
+
       await Tenant.update({
         lemon_customer_id: obj.customer_id.toString(),
         lemon_subscription_id: payload.data.id.toString(),
-        plan: 'professional' // Aquí se podría actualizar basado en el variant_id pagado
+        plan: resolvedPlan,
+        status: 'active'
       }, { where: { id: tenantId } });
     } else if (eventName === 'subscription_cancelled' || eventName === 'subscription_expired') {
       const tenantId = payload.meta.custom_data.tenant_id;

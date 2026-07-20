@@ -7,8 +7,7 @@ exports.checkUserLimit = async (req, res, next) => {
 
     const limits = {
       'free': 2,
-      'starter': 5,
-      'professional': Infinity,
+      'professional': 15,
       'enterprise': Infinity
     };
 
@@ -35,7 +34,6 @@ exports.checkProductLimit = async (req, res, next) => {
 
     const limits = {
       'free': 50,
-      'starter': 500,
       'professional': Infinity,
       'enterprise': Infinity
     };
@@ -53,5 +51,23 @@ exports.checkProductLimit = async (req, res, next) => {
   } catch (error) {
     console.error('Product limit validation error:', error);
     res.status(500).json({ message: 'Error al validar límites de productos.' });
+  }
+};
+
+exports.checkReportAccess = async (req, res, next) => {
+  try {
+    const tenant = await Tenant.findByPk(req.user.tenant_id);
+    if (!tenant) return res.status(404).json({ message: 'Organización no encontrada.' });
+
+    if (tenant.plan === 'free') {
+      return res.status(403).json({ 
+        message: 'Acceso denegado. Los reportes avanzados están disponibles en los planes Professional y Enterprise. Mejora tu plan en la sección Mi Farmacia.' 
+      });
+    }
+
+    next();
+  } catch (error) {
+    console.error('Report access validation error:', error);
+    res.status(500).json({ message: 'Error al validar acceso a reportes.' });
   }
 };
