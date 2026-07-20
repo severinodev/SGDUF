@@ -24,14 +24,14 @@ function ProtectedRoute({ children, roles }) {
 
   if (loading) return <div className="loading-spinner"><div className="spinner" /></div>;
   if (!user) return <Navigate to="/login" replace />;
-  if (roles && !roles.includes(user.role)) return <Navigate to="/" replace />;
+  if (roles && !roles.includes(user.role)) return <Navigate to="/dashboard" replace />;
 
   return children;
 }
 
 function DashboardOrRedirect() {
   const { user } = useAuth();
-  if (user?.role === 'cajero') return <Navigate to="/nueva-venta" replace />;
+  if (user?.role === 'cajero') return <Navigate to="/dashboard/nueva-venta" replace />;
   return <Dashboard />;
 }
 
@@ -40,11 +40,11 @@ function AppRoutes() {
 
   return (
     <Routes>
-      <Route path="/login" element={user ? <Navigate to="/" replace /> : <Login />} />
-      <Route path="/register" element={user ? <Navigate to="/" replace /> : <RegisterTenant />} />
-      <Route path="/landing" element={user ? <Navigate to="/" replace /> : <Landing />} />
+      <Route path="/login" element={user ? <Navigate to="/dashboard" replace /> : <Login />} />
+      <Route path="/register" element={user ? <Navigate to="/dashboard" replace /> : <RegisterTenant />} />
+      <Route path="/" element={user ? <Navigate to="/dashboard" replace /> : <Landing />} />
 
-      <Route path="/" element={
+      <Route path="/dashboard" element={
         <ProtectedRoute>
           <MainLayout />
         </ProtectedRoute>

@@ -38,7 +38,7 @@ export default function RegisterTenant() {
     try {
       await registerTenant(formData);
       await login(formData.email, formData.password);
-      navigate('/');
+      navigate('/dashboard');
     } catch (err) {
       setError(err.response?.data?.message || 'Error al registrar organización');
     } finally {

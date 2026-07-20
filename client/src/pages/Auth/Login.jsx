@@ -17,7 +17,7 @@ export default function Login() {
     setLoading(true);
     try {
       const user = await login(email, password);
-      navigate(user.role === 'cajero' ? '/nueva-venta' : '/');
+      navigate(user.role === 'cajero' ? '/dashboard/nueva-venta' : '/dashboard');
     } catch (err) {
       setError(err.response?.data?.message || 'Error al iniciar sesión');
     } finally {

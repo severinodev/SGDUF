@@ -59,7 +59,7 @@ export default function Settings() {
             </div>
             <div>
               <label style={{ display: 'block', marginBottom: 8, fontSize: 13, color: 'var(--text-muted)' }}>URL</label>
-              <div style={{ padding: '10px 16px', background: 'var(--bg-primary)', borderRadius: 8, border: '1px solid var(--border-primary)' }}>sgduf.com/{tenant.slug}</div>
+              <div style={{ padding: '10px 16px', background: 'var(--bg-primary)', borderRadius: 8, border: '1px solid var(--border-primary)' }}>sgduf.vercel.app/{tenant.slug}</div>
             </div>
           </div>
         </div>
