@@ -5,8 +5,8 @@ exports.create = async (req, res) => {
   let t;
   try {
     t = await sequelize.transaction();
-    const { client_id, items, discount = 0, payment_method = 'cash', amount_paid = 0, receipt_type = 'nota_venta' } = req.body;
-    const taxRate = parseFloat(process.env.TAX_RATE) || 0.12;
+    const { client_id, items, discount = 0, payment_method = 'cash', amount_paid = 0, receipt_type = 'nota_venta', tax_rate } = req.body;
+    const taxRate = tax_rate !== undefined ? parseFloat(tax_rate) : (parseFloat(process.env.TAX_RATE) || 0.12);
 
     if (!items || items.length === 0) {
       return res.status(400).json({ message: 'Debe incluir al menos un producto.' });

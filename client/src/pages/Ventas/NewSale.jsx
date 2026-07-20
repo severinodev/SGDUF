@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import Header from '../../components/Layout/Header';
 import api from '../../services/api';
+import { useAuth } from '../../context/AuthContext';
 import { FiSearch, FiShoppingCart, FiPlus, FiMinus, FiTrash2, FiUser, FiCheck } from 'react-icons/fi';
 
 export default function NewSale() {
@@ -16,10 +17,19 @@ export default function NewSale() {
   const [message, setMessage] = useState(null);
   const [processing, setProcessing] = useState(false);
   const [completedSale, setCompletedSale] = useState(null);
+  
+  const { tenant } = useAuth();
+  const [taxRateInput, setTaxRateInput] = useState(12);
 
   useEffect(() => {
     loadClients();
   }, []);
+
+  useEffect(() => {
+    if (tenant?.settings?.tax_rate !== undefined) {
+      setTaxRateInput(tenant.settings.tax_rate * 100);
+    }
+  }, [tenant]);
 
   useEffect(() => {
     if (search.length >= 2) {
@@ -61,7 +71,7 @@ export default function NewSale() {
   const removeItem = (productId) => setCart(cart.filter(c => c.product_id !== productId));
 
   const subtotal = cart.reduce((sum, c) => sum + (c.price * c.quantity - c.discount), 0);
-  const taxRate = 0.12;
+  const taxRate = taxRateInput / 100;
   const tax = (subtotal - discount) * taxRate;
   const total = subtotal - discount + tax;
   const change = paymentMethod === 'cash' && amountPaid ? Math.max(0, parseFloat(amountPaid) - total) : 0;
@@ -76,7 +86,8 @@ export default function NewSale() {
         discount,
         payment_method: paymentMethod,
         amount_paid: parseFloat(amountPaid) || total,
-        receipt_type: receiptType
+        receipt_type: receiptType,
+        tax_rate: taxRate
       });
       setCompletedSale(res.data.sale);
       setMessage({ type: 'success', text: '¡Venta registrada exitosamente!' });
@@ -162,7 +173,7 @@ export default function NewSale() {
           {/* Client & Discount */}
           <div className="card" style={{ marginTop: 'auto' }}>
             <div className="card-body">
-              <div className="form-row">
+              <div className="form-row" style={{ display: 'grid', gridTemplateColumns: '2fr 1fr 1fr', gap: 12 }}>
                 <div className="form-group" style={{ margin: 0 }}>
                   <label className="form-label"><FiUser style={{ verticalAlign: 'middle' }} /> Cliente</label>
                   <select className="form-select" value={selectedClient} onChange={(e) => setSelectedClient(e.target.value)}>
@@ -173,6 +184,10 @@ export default function NewSale() {
                 <div className="form-group" style={{ margin: 0 }}>
                   <label className="form-label">Descuento ($)</label>
                   <input className="form-input" type="number" step="0.01" min="0" value={discount} onChange={(e) => setDiscount(parseFloat(e.target.value) || 0)} />
+                </div>
+                <div className="form-group" style={{ margin: 0 }}>
+                  <label className="form-label">IVA (%)</label>
+                  <input className="form-input" type="number" step="0.5" min="0" max="100" value={taxRateInput} onChange={(e) => setTaxRateInput(parseFloat(e.target.value) || 0)} />
                 </div>
               </div>
             </div>
@@ -212,7 +227,7 @@ export default function NewSale() {
           <div className="pos-cart-totals">
             <div className="pos-total-row"><span>Subtotal</span><span>${subtotal.toFixed(2)}</span></div>
             {discount > 0 && <div className="pos-total-row"><span>Descuento</span><span>-${discount.toFixed(2)}</span></div>}
-            <div className="pos-total-row"><span>IVA (12%)</span><span>${tax.toFixed(2)}</span></div>
+            <div className="pos-total-row"><span>IVA ({taxRateInput}%)</span><span>${tax.toFixed(2)}</span></div>
             <div className="pos-total-row total"><span>TOTAL</span><span>${total.toFixed(2)}</span></div>
           </div>
 
