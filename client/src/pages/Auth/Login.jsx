@@ -62,13 +62,6 @@ export default function Login() {
           </button>
         </form>
 
-        <div style={{ marginTop: 24, padding: '14px', background: 'rgba(6,182,212,0.06)', borderRadius: 10, fontSize: 12, color: 'var(--text-tertiary)' }}>
-          <strong style={{ color: 'var(--primary-400)' }}>Demo:</strong><br />
-          Admin: admin@sgduf.com / admin123<br />
-          Gerente: gerente@sgduf.com / gerente123<br />
-          Cajero: cajero@sgduf.com / cajero123
-        </div>
-
         <div style={{ marginTop: 24, textAlign: 'center', fontSize: 13 }}>
           ¿No tienes una cuenta? <Link to="/register" style={{ color: 'var(--primary-400)', fontWeight: 600 }}>Crea tu farmacia gratis</Link>
         </div>

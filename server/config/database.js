@@ -2,7 +2,22 @@ require('dotenv').config({ path: '../.env' });
 const { Sequelize } = require('sequelize');
 const { AsyncLocalStorage } = require('async_hooks');
 
-const namespace = new AsyncLocalStorage();
+const storage = new AsyncLocalStorage();
+const namespace = {
+  run: (fn) => storage.run(new Map(), fn),
+  bind: (fn) => fn,
+  get: (key) => {
+    const store = storage.getStore();
+    return store ? store.get(key) : undefined;
+  },
+  set: (key, value) => {
+    const store = storage.getStore();
+    if (store) store.set(key, value);
+    return value;
+  },
+  getStore: () => storage.getStore() // Keep for our middleware check
+};
+
 Sequelize.useCLS(namespace);
 
 const isProduction = process.env.NODE_ENV === 'production';

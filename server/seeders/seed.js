@@ -8,29 +8,16 @@ async function seed() {
     await sequelize.sync({ force: true });
     console.log('✅ Base de datos sincronizada');
 
-    // Create users
-    const admin = await User.create({
-      name: 'Administrador',
-      email: 'admin@sgduf.com',
-      password: 'admin123',
-      role: 'admin'
+    // Create default tenant for seed data
+    const { Tenant } = require('../models');
+    const defaultTenant = await Tenant.create({
+      name: 'Farmacia Semilla',
+      slug: 'semilla',
+      plan: 'free',
+      status: 'active'
     });
 
-    await User.create({
-      name: 'Gerente General',
-      email: 'gerente@sgduf.com',
-      password: 'gerente123',
-      role: 'gerente'
-    });
-
-    await User.create({
-      name: 'Carlos Vendedor',
-      email: 'cajero@sgduf.com',
-      password: 'cajero123',
-      role: 'cajero'
-    });
-
-    console.log('✅ Usuarios creados');
+    console.log('✅ Organización semilla creada');
 
     // Create categories
     const categories = await Category.bulkCreate([
@@ -91,10 +78,6 @@ async function seed() {
     ]);
 
     console.log('✅ Clientes creados');
-    console.log('\n📋 Credenciales de acceso:');
-    console.log('   Admin:   admin@sgduf.com / admin123');
-    console.log('   Gerente: gerente@sgduf.com / gerente123');
-    console.log('   Cajero:  cajero@sgduf.com / cajero123');
     console.log('\n🎉 Seed completado exitosamente!');
 
     process.exit(0);

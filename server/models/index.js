@@ -115,6 +115,7 @@ CashRegister.belongsTo(User, { foreignKey: 'user_id', as: 'user' });
 module.exports = {
   sequelize,
   User,
+  Tenant,
   Category,
   Product,
   Client,
