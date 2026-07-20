@@ -50,7 +50,9 @@ exports.createCheckoutSession = async (req, res) => {
 
     if (error) {
       console.error('Error creando checkout de Lemon Squeezy:', error);
-      return res.status(500).json({ message: 'Error al iniciar el pago con Lemon Squeezy' });
+      return res.status(500).json({ 
+        message: `Error al iniciar el pago en Lemon Squeezy: ${error.message || JSON.stringify(error)}` 
+      });
     }
 
     res.json({ url: data.data.attributes.url });

@@ -21,7 +21,8 @@ export default function Settings() {
       const res = await api.post('/payments/create-checkout', { plan });
       window.location.href = res.data.url;
     } catch (err) {
-      alert('Error al iniciar pago');
+      const errMsg = err.response?.data?.message || 'Error al iniciar pago';
+      alert(errMsg);
       setLoading(false);
     }
   };
