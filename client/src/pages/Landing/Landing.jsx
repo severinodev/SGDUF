@@ -42,7 +42,7 @@ export default function Landing() {
             width: 40, height: 40, background: 'var(--gradient-primary)', borderRadius: 'var(--radius-md)',
             display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 20, color: 'white'
           }}><FiBox /></div>
-          <span style={{ fontSize: 20, fontWeight: 700 }}>SGDUF</span>
+          <span style={{ fontSize: 20, fontWeight: 700 }}>Farmasys</span>
         </div>
         <div style={{ display: 'flex', gap: 16 }}>
           <Link to="/login" className="btn" style={{ border: '1px solid var(--border-primary)', padding: '10px 24px' }}>
@@ -176,7 +176,7 @@ export default function Landing() {
         }}>
           <h2 style={{ fontSize: 28, fontWeight: 700, marginBottom: 12 }}>¿Listo para modernizar tu farmacia?</h2>
           <p style={{ color: 'var(--text-secondary)', marginBottom: 28, fontSize: 16 }}>
-            Únete a cientos de farmacias que ya usan SGDUF para gestionar su negocio.
+            Únete a cientos de farmacias que ya usan Farmasys para gestionar su negocio.
           </p>
           <Link to="/register" className="btn btn-primary" style={{ padding: '14px 40px', fontSize: 16 }}>
             Crea tu cuenta gratis <FiArrowRight style={{ marginLeft: 8 }} />
@@ -189,7 +189,7 @@ export default function Landing() {
         textAlign: 'center', padding: '32px 40px', borderTop: '1px solid var(--border-secondary)',
         color: 'var(--text-muted)', fontSize: 13
       }}>
-        © {new Date().getFullYear()} SGDUF. Sistema de Gestión de Droguería y Farmacia.
+        © {new Date().getFullYear()} Farmasys. Sistema de Gestión de Droguería y Farmacia.
       </footer>
     </div>
   );

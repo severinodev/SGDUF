@@ -77,7 +77,7 @@ exports.exportPDF = async (req, res) => {
     doc.pipe(res);
 
     // Header
-    doc.fontSize(20).font('Helvetica-Bold').text('SGDUF - Droguería', { align: 'center' });
+    doc.fontSize(20).font('Helvetica-Bold').text('Farmasys - Droguería', { align: 'center' });
     doc.moveDown(0.5);
     doc.fontSize(14).text(receipt.type === 'factura' ? 'FACTURA' : 'NOTA DE VENTA', { align: 'center' });
     doc.fontSize(12).font('Helvetica').text(`N°: ${receipt.receipt_number}`, { align: 'center' });

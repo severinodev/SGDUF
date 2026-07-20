@@ -10,8 +10,8 @@ export function AuthProvider({ children }) {
 
   useEffect(() => {
     const initAuth = async () => {
-      const token = localStorage.getItem('sgduf_token');
-      const savedUser = localStorage.getItem('sgduf_user');
+      const token = localStorage.getItem('farmasys_token');
+      const savedUser = localStorage.getItem('farmasys_user');
 
       if (token && savedUser) {
         try {
@@ -19,8 +19,8 @@ export function AuthProvider({ children }) {
           const res = await api.get('/tenants/me').catch(() => null);
           if (res?.data) setTenant(res.data);
         } catch {
-          localStorage.removeItem('sgduf_token');
-          localStorage.removeItem('sgduf_user');
+          localStorage.removeItem('farmasys_token');
+          localStorage.removeItem('farmasys_user');
         }
       }
       setLoading(false);
@@ -31,8 +31,8 @@ export function AuthProvider({ children }) {
   const login = async (email, password) => {
     const res = await api.post('/auth/login', { email, password });
     const { token, user: userData } = res.data;
-    localStorage.setItem('sgduf_token', token);
-    localStorage.setItem('sgduf_user', JSON.stringify(userData));
+    localStorage.setItem('farmasys_token', token);
+    localStorage.setItem('farmasys_user', JSON.stringify(userData));
     setUser(userData);
     
     const tenantRes = await api.get('/tenants/me', { headers: { Authorization: `Bearer ${token}` } }).catch(() => null);
@@ -47,8 +47,8 @@ export function AuthProvider({ children }) {
   };
 
   const logout = () => {
-    localStorage.removeItem('sgduf_token');
-    localStorage.removeItem('sgduf_user');
+    localStorage.removeItem('farmasys_token');
+    localStorage.removeItem('farmasys_user');
     setUser(null);
     setTenant(null);
   };

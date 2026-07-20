@@ -75,7 +75,7 @@ export default function Sidebar() {
     free: 'Plan Gratis',
     professional: 'Plan PRO',
     enterprise: 'Enterprise',
-  }[tenant?.plan] || 'SGDUF';
+  }[tenant?.plan] || 'Farmasys';
 
   return (
     <aside className="sidebar">
@@ -84,7 +84,7 @@ export default function Sidebar() {
           {tenant?.name?.charAt(0)?.toUpperCase() || <FiBox />}
         </div>
         <div className="sidebar-brand">
-          <h1>{tenant?.name || 'SGDUF'}</h1>
+          <h1>{tenant?.name || 'Farmasys'}</h1>
           <span>{planLabel}</span>
         </div>
       </div>

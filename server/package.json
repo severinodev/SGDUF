@@ -1,7 +1,7 @@
 {
-  "name": "sgduf-server",
+  "name": "farmasys-server",
   "version": "1.0.0",
-  "description": "SGDUF - Sistema de Gestión de Droguería/Farmacia - Backend API",
+  "description": "Farmasys - Sistema de Gestión de Droguería/Farmacia - Backend API",
   "main": "server.js",
   "scripts": {
     "start": "node server.js",

@@ -1,4 +1,4 @@
-# SGDUF - Drugstore/Pharmacy Management System
+# Farmasys - Drugstore/Pharmacy Management System
 
 A comprehensive web system for the complete management of a drugstore or pharmacy.
 
@@ -35,7 +35,7 @@ A comprehensive web system for the complete management of a drugstore or pharmac
 
 Using PostgreSQL locally, create the database:
 ```sql
-CREATE DATABASE sgduf;
+CREATE DATABASE farmasys;
 ```
 Or use Docker Desktop to spin up the database container:
 ```bash
@@ -49,7 +49,7 @@ Create/configure the `.env` file in the project root:
 # Server
 DB_HOST=localhost
 DB_PORT=5432
-DB_NAME=sgduf
+DB_NAME=farmasys
 DB_USER=postgres
 DB_PASSWORD=postgres
 JWT_SECRET=your_jwt_secret_key
@@ -111,9 +111,9 @@ docker-compose up --build
 
 | Role | Email | Password |
 |------|-------|----------|
-| Admin | admin@sgduf.com | admin123 |
-| Manager | gerente@sgduf.com | gerente123 |
-| Cashier | cajero@sgduf.com | cajero123 |
+| Admin | admin@farmasys.com | admin123 |
+| Manager | gerente@farmasys.com | gerente123 |
+| Cashier | cajero@farmasys.com | cajero123 |
 
 ---
 
@@ -142,7 +142,7 @@ docker-compose up --build
 ## 📁 Directory Structure
 
 ```
-SGDUF/
+Farmasys/
 ├── client/                  # React + Vite Frontend
 │   ├── src/
 │   │   ├── components/      # Common Layout (Sidebar, Header, MainLayout)

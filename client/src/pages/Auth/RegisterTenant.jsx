@@ -51,7 +51,7 @@ export default function RegisterTenant() {
       <div className="login-card" style={{ maxWidth: 460 }}>
         <div className="login-logo"><FiBox /></div>
         <h1>Crea tu Farmacia</h1>
-        <p className="login-subtitle">Únete a SGDUF y gestiona tu negocio</p>
+        <p className="login-subtitle">Únete a Farmasys y gestiona tu negocio</p>
 
         {error && <div className="alert alert-error">{error}</div>}
 
@@ -72,7 +72,7 @@ export default function RegisterTenant() {
               <div className="form-group">
                 <label className="form-label">URL de acceso</label>
                 <div style={{ display: 'flex', alignItems: 'center', background: 'var(--bg-primary)', border: '1px solid var(--border-primary)', borderRadius: 'var(--radius-md)', overflow: 'hidden' }}>
-                  <span style={{ padding: '12px 14px', color: 'var(--text-muted)', fontSize: 14, borderRight: '1px solid var(--border-primary)', whiteSpace: 'nowrap', background: 'rgba(255,255,255,0.02)' }}>sgduf.com/</span>
+                  <span style={{ padding: '12px 14px', color: 'var(--text-muted)', fontSize: 14, borderRight: '1px solid var(--border-primary)', whiteSpace: 'nowrap', background: 'rgba(255,255,255,0.02)' }}>sgduf.vercel.app/</span>
                   <input 
                     type="text" 
                     style={{ border: 'none', background: 'transparent', padding: '12px 14px', width: '100%', color: 'var(--text-primary)', outline: 'none', fontSize: 14 }}

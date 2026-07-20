@@ -63,7 +63,7 @@ app.get('/api/health', (req, res) => {
 
 // Root route
 app.get('/', (req, res) => {
-  res.json({ message: 'SGDUF API - Sistema de Gestión de Droguería/Farmacia', status: 'running' });
+  res.json({ message: 'Farmasys API - Sistema de Gestión de Droguería/Farmacia', status: 'running' });
 });
 
 // Error handler

@@ -29,7 +29,7 @@ export default function Login() {
     <div className="login-page">
       <div className="login-card">
         <div className="login-logo"><FiBox /></div>
-        <h1>SGDUF</h1>
+        <h1>Farmasys</h1>
         <p className="login-subtitle">Sistema de Gestión de Droguería y Farmacia</p>
 
         {error && <div className="alert alert-error">{error}</div>}
