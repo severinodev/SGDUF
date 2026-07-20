@@ -2,8 +2,9 @@ const { Op } = require('sequelize');
 const { sequelize, Purchase, PurchaseDetail, Product, Supplier, User } = require('../models');
 
 exports.create = async (req, res) => {
-  const t = await sequelize.transaction();
+  let t;
   try {
+    t = await sequelize.transaction();
     const { supplier_id, invoice_number, purchase_date, items } = req.body;
 
     if (!items || items.length === 0) {
@@ -61,7 +62,11 @@ exports.create = async (req, res) => {
 
     res.status(201).json({ message: 'Compra registrada.', purchase: completePurchase });
   } catch (error) {
-    await t.rollback();
+    if (t && !t.finished) {
+      try {
+        await t.rollback();
+      } catch (rollbackError) {}
+    }
     console.error('Create purchase error:', error);
     res.status(500).json({ message: 'Error al registrar compra.' });
   }

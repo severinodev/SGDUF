@@ -2,8 +2,9 @@ const { Op } = require('sequelize');
 const { sequelize, Sale, SaleDetail, Product, Client, User, Payment, Receipt } = require('../models');
 
 exports.create = async (req, res) => {
-  const t = await sequelize.transaction();
+  let t;
   try {
+    t = await sequelize.transaction();
     const { client_id, items, discount = 0, payment_method = 'cash', amount_paid = 0, receipt_type = 'nota_venta' } = req.body;
     const taxRate = parseFloat(process.env.TAX_RATE) || 0.12;
 
@@ -119,7 +120,11 @@ exports.create = async (req, res) => {
 
     res.status(201).json({ message: 'Venta registrada exitosamente.', sale: completeSale });
   } catch (error) {
-    await t.rollback();
+    if (t && !t.finished) {
+      try {
+        await t.rollback();
+      } catch (rollbackError) {}
+    }
     console.error('Create sale error:', error);
     res.status(500).json({ message: 'Error al registrar venta.' });
   }
@@ -208,8 +213,9 @@ exports.getBySeller = async (req, res) => {
 };
 
 exports.returnSale = async (req, res) => {
-  const t = await sequelize.transaction();
+  let t;
   try {
+    t = await sequelize.transaction();
     const sale = await Sale.findByPk(req.params.id, {
       include: [{ model: SaleDetail, as: 'details', include: [{ model: Product, as: 'product' }] }],
       transaction: t
@@ -238,7 +244,11 @@ exports.returnSale = async (req, res) => {
 
     res.json({ message: 'Devolución procesada exitosamente.', sale });
   } catch (error) {
-    await t.rollback();
+    if (t && !t.finished) {
+      try {
+        await t.rollback();
+      } catch (rollbackError) {}
+    }
     console.error('Return sale error:', error);
     res.status(500).json({ message: 'Error al procesar devolución.' });
   }

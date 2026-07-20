@@ -35,8 +35,9 @@ exports.login = async (req, res) => {
 };
 
 exports.register = async (req, res) => {
-  const t = await sequelize.transaction();
+  let t;
   try {
+    t = await sequelize.transaction();
     const { name, email, password, role, tenant_name, tenant_slug } = req.body;
 
     const existing = await User.findOne({ where: { email } });
@@ -72,7 +73,11 @@ exports.register = async (req, res) => {
     await t.commit();
     res.status(201).json({ message: 'Usuario/Organización creado exitosamente.', user: user.toJSON() });
   } catch (error) {
-    if (t && !t.finished) await t.rollback();
+    if (t && !t.finished) {
+      try {
+        await t.rollback();
+      } catch (rollbackError) {}
+    }
     console.error('Register error:', error);
     res.status(500).json({ message: 'Error al crear usuario.' });
   }
