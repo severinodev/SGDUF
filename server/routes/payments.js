@@ -6,7 +6,6 @@ const roleCheck = require('../middleware/roleCheck');
 
 router.post('/create-checkout', auth, roleCheck('admin'), paymentController.createCheckoutSession);
 
-// Webhook requires raw body for signature verification (express.raw is used to keep the body unparsed)
-router.post('/webhook', express.raw({ type: 'application/json' }), paymentController.webhook);
+router.post('/webhook', paymentController.webhook);
 
 module.exports = router;

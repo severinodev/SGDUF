@@ -68,15 +68,19 @@ exports.webhook = async (req, res) => {
   const signature = req.headers['x-signature'];
 
   try {
+    if (!req.rawBody) {
+      throw new Error('Cuerpo crudo de la petición no disponible.');
+    }
+
     const hmac = crypto.createHmac('sha256', secret);
-    const digest = Buffer.from(hmac.update(req.body).digest('hex'), 'utf8');
+    const digest = Buffer.from(hmac.update(req.rawBody).digest('hex'), 'utf8');
     const signatureBuffer = Buffer.from(signature || '', 'utf8');
 
     if (!crypto.timingSafeEqual(digest, signatureBuffer)) {
       throw new Error('Firma inválida.');
     }
 
-    const payload = JSON.parse(req.body.toString());
+    const payload = req.body;
     const eventName = payload.meta.event_name;
     const obj = payload.data.attributes;
 
