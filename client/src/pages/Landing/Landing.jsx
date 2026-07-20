@@ -1,5 +1,6 @@
 import { Link } from 'react-router-dom';
-import { FiBox, FiShield, FiBarChart2, FiUsers, FiCheck, FiArrowRight, FiPackage, FiDollarSign } from 'react-icons/fi';
+import { FiShield, FiBarChart2, FiUsers, FiCheck, FiArrowRight, FiPackage, FiDollarSign, FiLayers } from 'react-icons/fi';
+import { TbPill } from 'react-icons/tb';
 
 const features = [
   { icon: FiPackage, title: 'Inventario Inteligente', desc: 'Control de stock, alertas de vencimiento y productos por agotarse en tiempo real.' },
@@ -7,7 +8,7 @@ const features = [
   { icon: FiBarChart2, title: 'Reportes y Analytics', desc: 'Dashboards con ventas diarias, productos top y tendencias de tu negocio.' },
   { icon: FiUsers, title: 'Gestión de Usuarios', desc: 'Roles de admin, gerente y cajero con permisos granulares por función.' },
   { icon: FiShield, title: 'Seguridad', desc: 'Datos aislados por organización, cifrado JWT y auditoría de accesos.' },
-  { icon: FiBox, title: 'Multi-Farmacia', desc: 'Gestiona múltiples sucursales desde una sola cuenta con datos independientes.' },
+  { icon: FiLayers, title: 'Multi-Farmacia', desc: 'Gestiona múltiples sucursales desde una sola cuenta con datos independientes.' },
 ];
 
 const plans = [
@@ -41,7 +42,7 @@ export default function Landing() {
           <div style={{
             width: 40, height: 40, background: 'var(--gradient-primary)', borderRadius: 'var(--radius-md)',
             display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 20, color: 'white'
-          }}><FiBox /></div>
+          }}><TbPill /></div>
           <span style={{ fontSize: 20, fontWeight: 700 }}>Farmasys</span>
         </div>
         <div style={{ display: 'flex', gap: 16 }}>

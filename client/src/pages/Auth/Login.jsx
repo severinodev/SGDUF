@@ -1,7 +1,8 @@
 import { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
-import { FiMail, FiLock, FiBox } from 'react-icons/fi';
+import { FiMail, FiLock } from 'react-icons/fi';
+import { TbPill } from 'react-icons/tb';
 
 export default function Login() {
   const [email, setEmail] = useState('');
@@ -28,7 +29,7 @@ export default function Login() {
   return (
     <div className="login-page">
       <div className="login-card">
-        <div className="login-logo"><FiBox /></div>
+        <div className="login-logo"><TbPill /></div>
         <h1>Farmasys</h1>
         <p className="login-subtitle">Sistema de Gestión de Droguería y Farmacia</p>
 

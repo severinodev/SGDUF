@@ -1,7 +1,8 @@
 import { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
-import { FiBox, FiUser, FiMail, FiLock, FiArrowRight, FiArrowLeft } from 'react-icons/fi';
+import { FiUser, FiMail, FiLock, FiArrowRight, FiArrowLeft } from 'react-icons/fi';
+import { TbPill } from 'react-icons/tb';
 
 export default function RegisterTenant() {
   const navigate = useNavigate();
@@ -49,7 +50,7 @@ export default function RegisterTenant() {
   return (
     <div className="login-page">
       <div className="login-card" style={{ maxWidth: 460 }}>
-        <div className="login-logo"><FiBox /></div>
+        <div className="login-logo"><TbPill /></div>
         <h1>Crea tu Farmacia</h1>
         <p className="login-subtitle">Únete a Farmasys y gestiona tu negocio</p>
 

@@ -4,8 +4,9 @@ import {
   FiHome, FiPackage, FiGrid, FiAlertTriangle, FiClock,
   FiShoppingCart, FiUsers, FiRotateCcw, FiDollarSign,
   FiCreditCard, FiFileText, FiBarChart2, FiTruck,
-  FiLogOut, FiBox, FiUserPlus
+  FiLogOut, FiSettings, FiUserPlus
 } from 'react-icons/fi';
+import { TbPill } from 'react-icons/tb';
 
 const navItems = {
   admin: [
@@ -34,7 +35,7 @@ const navItems = {
     ]},
     { section: 'Administración', items: [
       { to: '/dashboard/usuarios', icon: FiUserPlus, label: 'Usuarios' },
-      { to: '/dashboard/settings', icon: FiBox,      label: 'Mi Farmacia' },
+      { to: '/dashboard/settings', icon: FiSettings, label: 'Mi Farmacia' },
     ]},
   ],
   gerente: [
@@ -81,7 +82,7 @@ export default function Sidebar() {
     <aside className="sidebar">
       <div className="sidebar-header">
         <div className="sidebar-logo">
-          {tenant?.name?.charAt(0)?.toUpperCase() || <FiBox />}
+          {tenant?.name?.charAt(0)?.toUpperCase() || <TbPill />}
         </div>
         <div className="sidebar-brand">
           <h1>{tenant?.name || 'Farmasys'}</h1>
