@@ -94,7 +94,13 @@ exports.getCurrent = async (req, res) => {
 
 exports.getHistory = async (req, res) => {
   try {
+    const where = {};
+    if (req.user.role === 'cajero') {
+      where.user_id = req.user.id;
+    }
+
     const registers = await CashRegister.findAll({
+      where,
       include: [{ model: User, as: 'user', attributes: ['id', 'name'] }],
       order: [['opened_at', 'DESC']],
       limit: 50

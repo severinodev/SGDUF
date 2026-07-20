@@ -1,4 +1,5 @@
 const sequelize = require('../config/database');
+const Tenant = require('./Tenant');
 const User = require('./User');
 const Category = require('./Category');
 const Product = require('./Product');
@@ -13,7 +14,47 @@ const SupplierPayment = require('./SupplierPayment');
 const Receipt = require('./Receipt');
 const CashRegister = require('./CashRegister');
 
+// ─── Hooks for Multi-Tenancy ───
+const { namespace } = sequelize;
+sequelize.addHook('beforeFind', (options) => {
+  const store = namespace ? namespace.getStore() : null;
+  const tenantId = store ? store.get('tenant_id') : null;
+  if (tenantId && options.model && options.model.name !== 'Tenant') {
+    options.where = options.where || {};
+    options.where.tenant_id = tenantId;
+  }
+});
+
+sequelize.addHook('beforeCreate', (instance, options) => {
+  const store = namespace ? namespace.getStore() : null;
+  const tenantId = store ? store.get('tenant_id') : null;
+  if (tenantId && instance.constructor.name !== 'Tenant') {
+    instance.tenant_id = tenantId;
+  }
+});
+
+sequelize.addHook('beforeBulkCreate', (instances, options) => {
+  const store = namespace ? namespace.getStore() : null;
+  const tenantId = store ? store.get('tenant_id') : null;
+  if (tenantId) {
+    instances.forEach(instance => {
+      if (instance.constructor.name !== 'Tenant') {
+        instance.tenant_id = tenantId;
+      }
+    });
+  }
+});
+
 // ─── Associations ───
+const modelsWithTenant = [
+  User, Category, Product, Client, Supplier, Sale, SaleDetail, 
+  Purchase, PurchaseDetail, Payment, SupplierPayment, Receipt, CashRegister
+];
+
+modelsWithTenant.forEach(model => {
+  Tenant.hasMany(model, { foreignKey: 'tenant_id' });
+  model.belongsTo(Tenant, { foreignKey: 'tenant_id', as: 'tenant' });
+});
 
 // Category <-> Product
 Category.hasMany(Product, { foreignKey: 'category_id', as: 'products' });

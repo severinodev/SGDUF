@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 import { FiMail, FiLock, FiBox } from 'react-icons/fi';
 
@@ -67,6 +67,10 @@ export default function Login() {
           Admin: admin@sgduf.com / admin123<br />
           Gerente: gerente@sgduf.com / gerente123<br />
           Cajero: cajero@sgduf.com / cajero123
+        </div>
+
+        <div style={{ marginTop: 24, textAlign: 'center', fontSize: 13 }}>
+          ¿No tienes una cuenta? <Link to="/register" style={{ color: 'var(--primary-400)', fontWeight: 600 }}>Crea tu farmacia gratis</Link>
         </div>
       </div>
     </div>

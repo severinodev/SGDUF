@@ -14,9 +14,10 @@ export default function CashRegister() {
 
   const load = async () => {
     try {
-      const [currRes, histRes] = await Promise.all([api.get('/cash-register/current'), api.get('/cash-register/history')]);
+      const currRes = await api.get('/cash-register/current').catch(() => ({ data: null }));
+      const histRes = await api.get('/cash-register/history').catch(() => ({ data: [] }));
       setCurrent(currRes.data);
-      setHistory(histRes.data);
+      setHistory(histRes.data || []);
     } catch (err) { console.error(err); }
     finally { setLoading(false); }
   };

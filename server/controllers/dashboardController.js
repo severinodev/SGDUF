@@ -88,3 +88,44 @@ exports.dashboard = async (req, res) => {
     res.status(500).json({ message: 'Error al obtener datos del dashboard.' });
   }
 };
+
+exports.notifications = async (req, res) => {
+  try {
+    const allProducts = await Product.findAll({ where: { active: true } });
+    const lowStock = allProducts.filter(p => p.stock <= p.min_stock);
+    
+    const thirtyDays = new Date();
+    thirtyDays.setDate(thirtyDays.getDate() + 30);
+    const expiring = await Product.findAll({
+      where: {
+        active: true,
+        expiration_date: { [Op.not]: null, [Op.lte]: thirtyDays }
+      }
+    });
+
+    const notifications = [];
+    
+    lowStock.forEach(p => {
+      notifications.push({
+        id: `stock-${p.id}`,
+        type: 'warning',
+        message: `Stock bajo: ${p.name} (Quedan ${p.stock})`,
+        date: new Date()
+      });
+    });
+
+    expiring.forEach(p => {
+      notifications.push({
+        id: `exp-${p.id}`,
+        type: 'danger',
+        message: `Por vencer: ${p.name} (${new Date(p.expiration_date).toLocaleDateString('es-ES')})`,
+        date: new Date()
+      });
+    });
+
+    res.json(notifications);
+  } catch (error) {
+    console.error('Notifications error:', error);
+    res.status(500).json({ message: 'Error al obtener notificaciones.' });
+  }
+};

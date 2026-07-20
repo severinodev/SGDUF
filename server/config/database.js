@@ -1,5 +1,9 @@
 require('dotenv').config({ path: '../.env' });
 const { Sequelize } = require('sequelize');
+const { AsyncLocalStorage } = require('async_hooks');
+
+const namespace = new AsyncLocalStorage();
+Sequelize.useCLS(namespace);
 
 const isProduction = process.env.NODE_ENV === 'production';
 
@@ -48,4 +52,5 @@ const sequelize = process.env.DATABASE_URL
       }
     );
 
+sequelize.namespace = namespace;
 module.exports = sequelize;

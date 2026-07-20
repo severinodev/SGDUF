@@ -1,5 +1,6 @@
 const jwt = require('jsonwebtoken');
 const { User } = require('../models');
+const { namespace } = require('../config/database');
 
 const auth = async (req, res, next) => {
   try {
@@ -10,6 +11,10 @@ const auth = async (req, res, next) => {
 
     const token = authHeader.split(' ')[1];
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
+
+    if (decoded.tenant_id && namespace && namespace.getStore()) {
+      namespace.getStore().set('tenant_id', decoded.tenant_id);
+    }
 
     const user = await User.findByPk(decoded.id);
     if (!user || !user.active) {

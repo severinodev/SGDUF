@@ -1,9 +1,9 @@
 const jwt = require('jsonwebtoken');
-const { User } = require('../models');
+const { User, Tenant, sequelize } = require('../models');
 
 const generateToken = (user) => {
   return jwt.sign(
-    { id: user.id, email: user.email, role: user.role },
+    { id: user.id, email: user.email, role: user.role, tenant_id: user.tenant_id },
     process.env.JWT_SECRET,
     { expiresIn: process.env.JWT_EXPIRES_IN || '24h' }
   );
@@ -35,17 +35,44 @@ exports.login = async (req, res) => {
 };
 
 exports.register = async (req, res) => {
+  const t = await sequelize.transaction();
   try {
-    const { name, email, password, role } = req.body;
+    const { name, email, password, role, tenant_name, tenant_slug } = req.body;
 
     const existing = await User.findOne({ where: { email } });
     if (existing) {
+      await t.rollback();
       return res.status(400).json({ message: 'El email ya está registrado.' });
     }
 
-    const user = await User.create({ name, email, password, role: role || 'cajero' });
-    res.status(201).json({ message: 'Usuario creado exitosamente.', user: user.toJSON() });
+    let tenantId = req.user ? req.user.tenant_id : null;
+
+    if (tenant_name && tenant_slug) {
+      const existingTenant = await Tenant.findOne({ where: { slug: tenant_slug } });
+      if (existingTenant) {
+        await t.rollback();
+        return res.status(400).json({ message: 'El slug de la organización ya está en uso.' });
+      }
+      const newTenant = await Tenant.create({
+        name: tenant_name,
+        slug: tenant_slug,
+        plan: 'free'
+      }, { transaction: t });
+      tenantId = newTenant.id;
+    }
+
+    const user = await User.create({ 
+      name, 
+      email, 
+      password, 
+      role: role || (tenant_name ? 'admin' : 'cajero'),
+      tenant_id: tenantId
+    }, { transaction: t });
+    
+    await t.commit();
+    res.status(201).json({ message: 'Usuario/Organización creado exitosamente.', user: user.toJSON() });
   } catch (error) {
+    if (t && !t.finished) await t.rollback();
     console.error('Register error:', error);
     res.status(500).json({ message: 'Error al crear usuario.' });
   }

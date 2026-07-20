@@ -37,6 +37,9 @@ app.use(cors({
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
+const tenantContext = require('./middleware/tenantContext');
+app.use(tenantContext);
+
 // Routes
 app.use('/api/auth', require('./routes/auth'));
 app.use('/api/products', require('./routes/products'));
@@ -50,6 +53,8 @@ app.use('/api/cash-register', require('./routes/cashRegister'));
 app.use('/api/dashboard', require('./routes/dashboard'));
 app.use('/api/reports', require('./routes/reports'));
 app.use('/api/suppliers', require('./routes/suppliers'));
+app.use('/api/payments', require('./routes/payments'));
+app.use('/api/tenants', require('./routes/tenants'));
 
 // Health check
 app.get('/api/health', (req, res) => {

@@ -63,25 +63,35 @@ const navItems = {
 };
 
 export default function Sidebar() {
-  const { user, logout } = useAuth();
+  const { user, tenant, logout } = useAuth();
   const location = useLocation();
 
   const sections = navItems[user?.role] || navItems.cajero;
+  
+  // Add Settings for admin
+  const activeSections = [...sections];
+  if (user?.role === 'admin' && !activeSections.find(s => s.section === 'Configuración')) {
+    activeSections.push({
+      section: 'Configuración', items: [
+        { to: '/settings', icon: FiBox, label: 'Mi Farmacia' }
+      ]
+    });
+  }
 
   return (
     <aside className="sidebar">
       <div className="sidebar-header">
         <div className="sidebar-logo">
-          <FiBox />
+          {tenant?.name?.charAt(0)?.toUpperCase() || <FiBox />}
         </div>
         <div className="sidebar-brand">
-          <h1>SGDUF</h1>
-          <span>Gestión Farmacéutica</span>
+          <h1>{tenant?.name || 'SGDUF'}</h1>
+          <span>{tenant?.plan === 'professional' ? 'PRO' : 'Gestión Farmacéutica'}</span>
         </div>
       </div>
 
       <nav className="sidebar-nav">
-        {sections.map((section) => (
+        {activeSections.map((section) => (
           <div className="sidebar-section" key={section.section}>
             <div className="sidebar-section-title">{section.section}</div>
             {section.items.map((item) => (

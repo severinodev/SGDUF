@@ -15,6 +15,8 @@ import CashRegister from './pages/Pagos/CashRegister';
 import Suppliers from './pages/Pagos/Suppliers';
 import Receipts from './pages/Comprobantes/Receipts';
 import Reports from './pages/Reportes/Reports';
+import RegisterTenant from './pages/Auth/RegisterTenant';
+import Settings from './pages/Settings/Settings';
 
 function ProtectedRoute({ children, roles }) {
   const { user, loading } = useAuth();
@@ -26,12 +28,19 @@ function ProtectedRoute({ children, roles }) {
   return children;
 }
 
+function DashboardOrRedirect() {
+  const { user } = useAuth();
+  if (user?.role === 'cajero') return <Navigate to="/nueva-venta" replace />;
+  return <Dashboard />;
+}
+
 function AppRoutes() {
   const { user } = useAuth();
 
   return (
     <Routes>
       <Route path="/login" element={user ? <Navigate to="/" replace /> : <Login />} />
+      <Route path="/register" element={user ? <Navigate to="/" replace /> : <RegisterTenant />} />
 
       <Route path="/" element={
         <ProtectedRoute>
@@ -39,11 +48,7 @@ function AppRoutes() {
         </ProtectedRoute>
       }>
         {/* Dashboard - admin & gerente */}
-        <Route index element={
-          <ProtectedRoute roles={['admin', 'gerente']}>
-            <Dashboard />
-          </ProtectedRoute>
-        } />
+        <Route index element={<DashboardOrRedirect />} />
 
         {/* Inventario */}
         <Route path="productos" element={
@@ -100,6 +105,13 @@ function AppRoutes() {
         <Route path="reportes" element={
           <ProtectedRoute roles={['admin', 'gerente']}>
             <Reports />
+          </ProtectedRoute>
+        } />
+
+        {/* Settings (Admin) */}
+        <Route path="settings" element={
+          <ProtectedRoute roles={['admin']}>
+            <Settings />
           </ProtectedRoute>
         } />
       </Route>
