@@ -1,5 +1,5 @@
 const { Op } = require('sequelize');
-const { Receipt, Sale, SaleDetail, Product, Client, User } = require('../models');
+const { Receipt, Sale, SaleDetail, Product, Client, User, Tenant } = require('../models');
 const PDFDocument = require('pdfkit');
 
 exports.getAll = async (req, res) => {
@@ -57,16 +57,19 @@ exports.getById = async (req, res) => {
 
 exports.exportPDF = async (req, res) => {
   try {
-    const receipt = await Receipt.findByPk(req.params.id, {
-      include: [{
-        model: Sale, as: 'sale',
-        include: [
-          { model: SaleDetail, as: 'details', include: [{ model: Product, as: 'product' }] },
-          { model: Client, as: 'client' },
-          { model: User, as: 'seller', attributes: ['id', 'name'] }
-        ]
-      }]
-    });
+    const [receipt, tenant] = await Promise.all([
+      Receipt.findByPk(req.params.id, {
+        include: [{
+          model: Sale, as: 'sale',
+          include: [
+            { model: SaleDetail, as: 'details', include: [{ model: Product, as: 'product' }] },
+            { model: Client, as: 'client' },
+            { model: User, as: 'seller', attributes: ['id', 'name'] }
+          ]
+        }]
+      }),
+      Tenant.findByPk(req.user.tenant_id)
+    ]);
 
     if (!receipt) return res.status(404).json({ message: 'Comprobante no encontrado.' });
 
@@ -77,7 +80,8 @@ exports.exportPDF = async (req, res) => {
     doc.pipe(res);
 
     // Header
-    doc.fontSize(20).font('Helvetica-Bold').text('Farmasys - Droguería', { align: 'center' });
+    const pharmacyName = tenant ? tenant.name : 'Farmasys';
+    doc.fontSize(20).font('Helvetica-Bold').text(pharmacyName, { align: 'center' });
     doc.moveDown(0.5);
     doc.fontSize(14).text(receipt.type === 'factura' ? 'FACTURA' : 'NOTA DE VENTA', { align: 'center' });
     doc.fontSize(12).font('Helvetica').text(`N°: ${receipt.receipt_number}`, { align: 'center' });
