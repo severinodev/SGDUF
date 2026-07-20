@@ -17,6 +17,7 @@ import Receipts from './pages/Comprobantes/Receipts';
 import Reports from './pages/Reportes/Reports';
 import RegisterTenant from './pages/Auth/RegisterTenant';
 import Settings from './pages/Settings/Settings';
+import Landing from './pages/Landing/Landing';
 
 function ProtectedRoute({ children, roles }) {
   const { user, loading } = useAuth();
@@ -41,6 +42,7 @@ function AppRoutes() {
     <Routes>
       <Route path="/login" element={user ? <Navigate to="/" replace /> : <Login />} />
       <Route path="/register" element={user ? <Navigate to="/" replace /> : <RegisterTenant />} />
+      <Route path="/landing" element={user ? <Navigate to="/" replace /> : <Landing />} />
 
       <Route path="/" element={
         <ProtectedRoute>

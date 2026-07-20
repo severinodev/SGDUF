@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
-import { FiBox, FiUser, FiMail, FiLock } from 'react-icons/fi';
+import { FiBox, FiUser, FiMail, FiLock, FiArrowRight, FiArrowLeft } from 'react-icons/fi';
 
 export default function RegisterTenant() {
   const navigate = useNavigate();
@@ -47,102 +47,97 @@ export default function RegisterTenant() {
   };
 
   return (
-    <div className="auth-container">
-      <div className="auth-card">
-        <div className="auth-header">
-          <div className="auth-logo"><FiBox /></div>
-          <h2>Crea tu Farmacia</h2>
-          <p>Únete a SGDUF y gestiona tu negocio</p>
-        </div>
+    <div className="login-page">
+      <div className="login-card" style={{ maxWidth: 460 }}>
+        <div className="login-logo"><FiBox /></div>
+        <h1>Crea tu Farmacia</h1>
+        <p className="login-subtitle">Únete a SGDUF y gestiona tu negocio</p>
 
-        {error && <div style={{ color: 'var(--danger-500)', background: 'var(--danger-50)', padding: 12, borderRadius: 8, marginBottom: 20 }}>{error}</div>}
+        {error && <div className="alert alert-error">{error}</div>}
 
-        <form onSubmit={handleSubmit} className="auth-form">
+        <form onSubmit={handleSubmit}>
           {step === 1 ? (
-            <div className="auth-step">
+            <>
               <div className="form-group">
-                <label>Nombre de la Farmacia</label>
-                <div className="input-group">
-                  <FiBox className="input-icon" />
-                  <input 
-                    type="text" 
-                    required
-                    value={formData.tenant_name}
-                    onChange={handleOrgChange}
-                    placeholder="Ej. Farmacia Cruz Azul"
-                  />
-                </div>
+                <label className="form-label">Nombre de la Farmacia</label>
+                <input 
+                  type="text" 
+                  className="form-input"
+                  required
+                  value={formData.tenant_name}
+                  onChange={handleOrgChange}
+                  placeholder="Ej. Farmacia Cruz Azul"
+                />
               </div>
               <div className="form-group">
-                <label>URL de acceso</label>
-                <div className="input-group">
-                  <span style={{ padding: '0 12px', color: 'var(--text-muted)', borderRight: '1px solid var(--border-primary)', display: 'flex', alignItems: 'center' }}>sgduf.com/</span>
+                <label className="form-label">URL de acceso</label>
+                <div style={{ display: 'flex', alignItems: 'center', background: 'var(--bg-primary)', border: '1px solid var(--border-primary)', borderRadius: 'var(--radius-md)', overflow: 'hidden' }}>
+                  <span style={{ padding: '12px 14px', color: 'var(--text-muted)', fontSize: 14, borderRight: '1px solid var(--border-primary)', whiteSpace: 'nowrap', background: 'rgba(255,255,255,0.02)' }}>sgduf.com/</span>
                   <input 
                     type="text" 
+                    style={{ border: 'none', background: 'transparent', padding: '12px 14px', width: '100%', color: 'var(--text-primary)', outline: 'none', fontSize: 14 }}
                     required
                     value={formData.tenant_slug}
                     onChange={(e) => setFormData({...formData, tenant_slug: e.target.value})}
+                    placeholder="mi-farmacia"
                   />
                 </div>
               </div>
-              <button type="button" className="btn btn-primary btn-block" onClick={() => {
+              <button type="button" className="btn btn-primary login-btn" onClick={() => {
                 if (formData.tenant_name && formData.tenant_slug) setStep(2);
               }}>
-                Continuar
+                Continuar <FiArrowRight style={{ marginLeft: 8 }} />
               </button>
-            </div>
+            </>
           ) : (
-            <div className="auth-step">
+            <>
               <div className="form-group">
-                <label>Tu Nombre (Administrador)</label>
-                <div className="input-group">
-                  <FiUser className="input-icon" />
-                  <input 
-                    type="text" 
-                    required
-                    value={formData.name}
-                    onChange={e => setFormData({...formData, name: e.target.value})}
-                  />
-                </div>
+                <label className="form-label">Tu Nombre (Administrador)</label>
+                <input 
+                  type="text" 
+                  className="form-input"
+                  required
+                  value={formData.name}
+                  onChange={e => setFormData({...formData, name: e.target.value})}
+                  placeholder="Tu nombre completo"
+                />
               </div>
               <div className="form-group">
-                <label>Email</label>
-                <div className="input-group">
-                  <FiMail className="input-icon" />
-                  <input 
-                    type="email" 
-                    required
-                    value={formData.email}
-                    onChange={e => setFormData({...formData, email: e.target.value})}
-                  />
-                </div>
+                <label className="form-label">Email</label>
+                <input 
+                  type="email" 
+                  className="form-input"
+                  required
+                  value={formData.email}
+                  onChange={e => setFormData({...formData, email: e.target.value})}
+                  placeholder="correo@ejemplo.com"
+                />
               </div>
               <div className="form-group">
-                <label>Contraseña</label>
-                <div className="input-group">
-                  <FiLock className="input-icon" />
-                  <input 
-                    type="password" 
-                    required
-                    value={formData.password}
-                    onChange={e => setFormData({...formData, password: e.target.value})}
-                  />
-                </div>
+                <label className="form-label">Contraseña</label>
+                <input 
+                  type="password" 
+                  className="form-input"
+                  required
+                  value={formData.password}
+                  onChange={e => setFormData({...formData, password: e.target.value})}
+                  placeholder="••••••••"
+                />
               </div>
-              <div style={{ display: 'flex', gap: 10 }}>
-                <button type="button" className="btn" style={{ flex: 1, border: '1px solid var(--border-primary)' }} onClick={() => setStep(1)}>
-                  Volver
+              <div style={{ display: 'flex', gap: 12, marginTop: 8 }}>
+                <button type="button" className="btn" style={{ flex: 1, border: '1px solid var(--border-primary)', padding: 12 }} onClick={() => setStep(1)}>
+                  <FiArrowLeft style={{ marginRight: 6 }} /> Volver
                 </button>
-                <button type="submit" className="btn btn-primary" style={{ flex: 1 }} disabled={loading}>
+                <button type="submit" className="btn btn-primary" style={{ flex: 1, padding: 12 }} disabled={loading}>
                   {loading ? 'Creando...' : 'Crear Cuenta'}
                 </button>
               </div>
-            </div>
+            </>
           )}
         </form>
 
-        <div className="auth-footer" style={{ marginTop: 20, textAlign: 'center' }}>
-          <p>¿Ya tienes una cuenta? <Link to="/login" style={{ color: 'var(--primary-500)' }}>Inicia sesión</Link></p>
+        <div style={{ marginTop: 24, textAlign: 'center', fontSize: 13, color: 'var(--text-tertiary)' }}>
+          ¿Ya tienes una cuenta? <Link to="/login" style={{ color: 'var(--primary-400)', fontWeight: 600 }}>Inicia sesión</Link>
         </div>
       </div>
     </div>

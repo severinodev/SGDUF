@@ -42,7 +42,7 @@ export function AuthProvider({ children }) {
   };
   
   const registerTenant = async (data) => {
-    const res = await api.post('/auth/register', data);
+    const res = await api.post('/auth/register-tenant', data);
     return res.data;
   };
 
