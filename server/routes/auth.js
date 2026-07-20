@@ -10,5 +10,7 @@ router.post('/register', auth, roleCheck('admin'), checkUserLimit, authControlle
 router.get('/profile', auth, authController.getProfile);
 router.put('/profile', auth, authController.updateProfile);
 router.get('/users', auth, roleCheck('admin'), authController.getUsers);
+router.put('/users/:id', auth, roleCheck('admin'), authController.updateUser);
+router.delete('/users/:id', auth, roleCheck('admin'), authController.deleteUser);
 
 module.exports = router;

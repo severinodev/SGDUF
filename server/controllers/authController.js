@@ -112,3 +112,36 @@ exports.getUsers = async (req, res) => {
     res.status(500).json({ message: 'Error al obtener usuarios.' });
   }
 };
+
+exports.updateUser = async (req, res) => {
+  try {
+    const user = await User.findOne({ where: { id: req.params.id, tenant_id: req.user.tenant_id } });
+    if (!user) return res.status(404).json({ message: 'Usuario no encontrado.' });
+
+    const { name, role, password, active } = req.body;
+    if (name !== undefined)     user.name   = name;
+    if (role !== undefined)     user.role   = role;
+    if (active !== undefined)   user.active = active;
+    if (password)               user.password = password;  // hashed by beforeSave hook
+
+    await user.save();
+    res.json({ message: 'Usuario actualizado.', user: user.toJSON() });
+  } catch (error) {
+    console.error('Update user error:', error);
+    res.status(500).json({ message: 'Error al actualizar usuario.' });
+  }
+};
+
+exports.deleteUser = async (req, res) => {
+  try {
+    const user = await User.findOne({ where: { id: req.params.id, tenant_id: req.user.tenant_id } });
+    if (!user) return res.status(404).json({ message: 'Usuario no encontrado.' });
+    if (user.id === req.user.id) return res.status(400).json({ message: 'No puedes eliminarte a ti mismo.' });
+
+    await user.destroy();
+    res.json({ message: 'Usuario eliminado.' });
+  } catch (error) {
+    console.error('Delete user error:', error);
+    res.status(500).json({ message: 'Error al eliminar usuario.' });
+  }
+};

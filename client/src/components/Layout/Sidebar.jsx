@@ -1,82 +1,81 @@
-import { NavLink, useLocation } from 'react-router-dom';
+import { NavLink } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 import {
   FiHome, FiPackage, FiGrid, FiAlertTriangle, FiClock,
   FiShoppingCart, FiUsers, FiRotateCcw, FiDollarSign,
   FiCreditCard, FiFileText, FiBarChart2, FiTruck,
-  FiLogOut, FiBox
+  FiLogOut, FiBox, FiUserPlus
 } from 'react-icons/fi';
 
 const navItems = {
   admin: [
     { section: 'Principal', items: [
-      { to: '/', icon: FiHome, label: 'Dashboard' },
+      { to: '/dashboard', icon: FiHome, label: 'Dashboard', end: true },
     ]},
     { section: 'Inventario', items: [
-      { to: '/productos', icon: FiPackage, label: 'Medicamentos' },
-      { to: '/categorias', icon: FiGrid, label: 'Categorías' },
-      { to: '/stock-bajo', icon: FiAlertTriangle, label: 'Alertas Stock' },
-      { to: '/por-vencer', icon: FiClock, label: 'Por Vencer' },
+      { to: '/dashboard/productos',  icon: FiPackage,      label: 'Medicamentos' },
+      { to: '/dashboard/categorias', icon: FiGrid,         label: 'Categorías' },
+      { to: '/dashboard/stock-bajo', icon: FiAlertTriangle,label: 'Alertas Stock' },
+      { to: '/dashboard/por-vencer', icon: FiClock,        label: 'Por Vencer' },
     ]},
     { section: 'Ventas', items: [
-      { to: '/nueva-venta', icon: FiShoppingCart, label: 'Nueva Venta' },
-      { to: '/ventas', icon: FiFileText, label: 'Historial Ventas' },
-      { to: '/clientes', icon: FiUsers, label: 'Clientes' },
-      { to: '/devoluciones', icon: FiRotateCcw, label: 'Devoluciones' },
+      { to: '/dashboard/nueva-venta', icon: FiShoppingCart, label: 'Nueva Venta' },
+      { to: '/dashboard/ventas',      icon: FiFileText,     label: 'Historial Ventas' },
+      { to: '/dashboard/clientes',    icon: FiUsers,        label: 'Clientes' },
+      { to: '/dashboard/devoluciones',icon: FiRotateCcw,    label: 'Devoluciones' },
     ]},
     { section: 'Pagos', items: [
-      { to: '/caja', icon: FiDollarSign, label: 'Caja' },
-      { to: '/comprobantes', icon: FiCreditCard, label: 'Comprobantes' },
-      { to: '/proveedores', icon: FiTruck, label: 'Proveedores' },
+      { to: '/dashboard/caja',        icon: FiDollarSign,  label: 'Caja' },
+      { to: '/dashboard/comprobantes',icon: FiCreditCard,  label: 'Comprobantes' },
+      { to: '/dashboard/proveedores', icon: FiTruck,       label: 'Proveedores' },
     ]},
     { section: 'Reportes', items: [
-      { to: '/reportes', icon: FiBarChart2, label: 'Reportes' },
+      { to: '/dashboard/reportes', icon: FiBarChart2, label: 'Reportes' },
+    ]},
+    { section: 'Administración', items: [
+      { to: '/dashboard/usuarios', icon: FiUserPlus, label: 'Usuarios' },
+      { to: '/dashboard/settings', icon: FiBox,      label: 'Mi Farmacia' },
     ]},
   ],
   gerente: [
     { section: 'Principal', items: [
-      { to: '/', icon: FiHome, label: 'Dashboard' },
+      { to: '/dashboard', icon: FiHome, label: 'Dashboard', end: true },
     ]},
     { section: 'Inventario', items: [
-      { to: '/productos', icon: FiPackage, label: 'Medicamentos' },
-      { to: '/stock-bajo', icon: FiAlertTriangle, label: 'Alertas Stock' },
-      { to: '/por-vencer', icon: FiClock, label: 'Por Vencer' },
+      { to: '/dashboard/productos',  icon: FiPackage,      label: 'Medicamentos' },
+      { to: '/dashboard/stock-bajo', icon: FiAlertTriangle,label: 'Alertas Stock' },
+      { to: '/dashboard/por-vencer', icon: FiClock,        label: 'Por Vencer' },
     ]},
     { section: 'Reportes', items: [
-      { to: '/reportes', icon: FiBarChart2, label: 'Reportes' },
-      { to: '/ventas', icon: FiFileText, label: 'Historial Ventas' },
+      { to: '/dashboard/reportes', icon: FiBarChart2, label: 'Reportes' },
+      { to: '/dashboard/ventas',   icon: FiFileText,  label: 'Historial Ventas' },
     ]},
   ],
   cajero: [
     { section: 'Principal', items: [
-      { to: '/nueva-venta', icon: FiShoppingCart, label: 'Nueva Venta' },
+      { to: '/dashboard/nueva-venta', icon: FiShoppingCart, label: 'Nueva Venta' },
     ]},
     { section: 'Ventas', items: [
-      { to: '/ventas', icon: FiFileText, label: 'Mis Ventas' },
-      { to: '/clientes', icon: FiUsers, label: 'Clientes' },
+      { to: '/dashboard/ventas',   icon: FiFileText,  label: 'Mis Ventas' },
+      { to: '/dashboard/clientes', icon: FiUsers,     label: 'Clientes' },
     ]},
     { section: 'Pagos', items: [
-      { to: '/caja', icon: FiDollarSign, label: 'Caja' },
-      { to: '/comprobantes', icon: FiCreditCard, label: 'Comprobantes' },
+      { to: '/dashboard/caja',        icon: FiDollarSign, label: 'Caja' },
+      { to: '/dashboard/comprobantes',icon: FiCreditCard, label: 'Comprobantes' },
     ]},
   ],
 };
 
 export default function Sidebar() {
   const { user, tenant, logout } = useAuth();
-  const location = useLocation();
 
   const sections = navItems[user?.role] || navItems.cajero;
-  
-  // Add Settings for admin
-  const activeSections = [...sections];
-  if (user?.role === 'admin' && !activeSections.find(s => s.section === 'Configuración')) {
-    activeSections.push({
-      section: 'Configuración', items: [
-        { to: '/settings', icon: FiBox, label: 'Mi Farmacia' }
-      ]
-    });
-  }
+
+  const planLabel = {
+    free: 'Plan Gratis',
+    professional: 'Plan PRO',
+    enterprise: 'Enterprise',
+  }[tenant?.plan] || 'SGDUF';
 
   return (
     <aside className="sidebar">
@@ -86,22 +85,20 @@ export default function Sidebar() {
         </div>
         <div className="sidebar-brand">
           <h1>{tenant?.name || 'SGDUF'}</h1>
-          <span>{tenant?.plan === 'professional' ? 'PRO' : 'Gestión Farmacéutica'}</span>
+          <span>{planLabel}</span>
         </div>
       </div>
 
       <nav className="sidebar-nav">
-        {activeSections.map((section) => (
+        {sections.map((section) => (
           <div className="sidebar-section" key={section.section}>
             <div className="sidebar-section-title">{section.section}</div>
             {section.items.map((item) => (
               <NavLink
                 key={item.to}
                 to={item.to}
-                className={({ isActive }) =>
-                  `sidebar-link ${isActive && (item.to === '/' ? location.pathname === '/' : true) ? 'active' : ''}`
-                }
-                end={item.to === '/'}
+                end={item.end ?? false}
+                className={({ isActive }) => `sidebar-link ${isActive ? 'active' : ''}`}
               >
                 <item.icon className="nav-icon" />
                 <span>{item.label}</span>

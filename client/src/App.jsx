@@ -18,6 +18,7 @@ import Reports from './pages/Reportes/Reports';
 import RegisterTenant from './pages/Auth/RegisterTenant';
 import Settings from './pages/Settings/Settings';
 import Landing from './pages/Landing/Landing';
+import Usuarios from './pages/Usuarios/Usuarios';
 
 function ProtectedRoute({ children, roles }) {
   const { user, loading } = useAuth();
@@ -114,6 +115,13 @@ function AppRoutes() {
         <Route path="settings" element={
           <ProtectedRoute roles={['admin']}>
             <Settings />
+          </ProtectedRoute>
+        } />
+
+        {/* Gestión de Usuarios (Admin) */}
+        <Route path="usuarios" element={
+          <ProtectedRoute roles={['admin']}>
+            <Usuarios />
           </ProtectedRoute>
         } />
       </Route>
