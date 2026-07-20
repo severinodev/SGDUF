@@ -4,7 +4,12 @@ const { AsyncLocalStorage } = require('async_hooks');
 
 const storage = new AsyncLocalStorage();
 const namespace = {
-  run: (fn) => storage.run(new Map(), fn),
+  run: (store, fn) => {
+    if (typeof store === 'function') {
+      return storage.run(new Map(), store);
+    }
+    return storage.run(store, fn);
+  },
   bind: (fn) => fn,
   get: (key) => {
     const store = storage.getStore();
